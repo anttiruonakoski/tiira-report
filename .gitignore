@@ -2,3 +2,5 @@ downloader/*
 !downloader/*.csv
 *checkpoint*
 .ipynb_checkpoints/*
+*.html
+.vscode
