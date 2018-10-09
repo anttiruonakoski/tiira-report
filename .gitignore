@@ -4,3 +4,4 @@ downloader/*
 .ipynb_checkpoints/*
 *.html
 .vscode
+tmp/*
