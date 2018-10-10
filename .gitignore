@@ -1,7 +1,11 @@
 downloader/*
+downloader/credentials.txt
 !downloader/*.csv
+!downloader/*.py
 *checkpoint*
 .ipynb_checkpoints/*
 *.html
 .vscode
 tmp/*
+scratch*
+

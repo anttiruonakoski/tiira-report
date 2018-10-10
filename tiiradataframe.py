@@ -23,12 +23,7 @@ def timeframe(data,days=7):
     dataframe = data[(data['Tallennusaika'] > start)]
     return dataframe
 
-class TiiraData(object):
-
-    def __init__(self, csv_file):
-        self.csv_file = csv_file
-
-    def read_csv(self):
+def read_csv(csv_file):
 
         parse_dates = ['Tallennusaika','Pvm1','Pvm2']
         df = pd.read_csv(self.csv_file, sep='#', parse_dates=parse_dates)    
@@ -38,6 +33,13 @@ class TiiraData(object):
         #df.head(2)
         return df
 
+
+class TiiraData(object):
+
+    def __init__(self, csv_file):
+        self.csv_file = csv_file
+
+    
     def group(self):
         return self.groupby(['Laji'], as_index=False, sort=False).agg({'Määrä': sum, 'Havainto id': 'count'}) 
 
@@ -74,7 +76,7 @@ class TiiraData(object):
 
 if __name__ == "__main__":
 
-    tiiradata = TiiraData('downloader/testidata_u_07102018.csv')
+    tiiradata = read_csv('downloader/testidata_u_07102018.csv')
     
     try:
         df = tiiradata.read_csv()

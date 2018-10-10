@@ -19,7 +19,7 @@ from bokeh.layouts import column
 from bokeh.resources import CDN
 from bokeh.embed import file_html
 
-class TiiraChart()
+class SumChart()
 
     p = []
     periods = {0:7,1:30}
@@ -59,6 +59,7 @@ class TiiraChart()
         p[key].add_layout(labels)
         p[key].add_layout(labelshigh)
 
+class SubmitterTable()
 
 if __name__ == "__main__":
 
