@@ -52,8 +52,8 @@ def main(df):
         #sort keys yksilosumma, havaintorivisumma
         #
         columns = {
-            'havainnot': ['havaintorivisumma', 'Tiiraan ilmotettua havaintoriviä, viimeiset '],
-            'yksilot':  ['yksilosumma', 'Tiiraan ilmotettua yksilöä, viimeiset ']
+            'havainnot': ['havaintorivisumma', 'Tiiraan ilmotetut havaintorivit '],
+            'yksilot':  ['yksilosumma', 'Tiiraan ilmotetut yksilöt ']
         }
         for days in [7, 30]:
             for key, value in columns.items():    
@@ -63,7 +63,7 @@ def main(df):
                                             .pipe(sort, sortkey=value[0]).head(15) 
                 #drop all columns but laji and aggregate                            
                 plotdata[plotkey] = x[['laji', value[0]]]
-                title = value[1] + str(days) + ' päivää'
+                title = value[1] + str(days) + ' päivän aikana'
 
                 s,d = (SumChart(data = plotdata[plotkey], title = title).embedded())
                 figures.append(dict(script=s, div=d))
@@ -72,7 +72,7 @@ def main(df):
                                     .pipe(groupbysubmitter) \
                                     .pipe(sort, sortkey='havaintoriviä').head(5)
 
-            title = 'Ahkerimmat havaintojen tallentajat, viimeiset ' + str(days) + ' päivää'
+            title = 'Ahkerimmat tallentajat ' + str(days) + ' päivän aikana'
             d = pd.DataFrame.to_html(plotdata[str(days) + 'tallentajat'], index=False, classes='submittertable')
             #s,d = (TableChart(data = plotdata[str(days) + 'tallentajat'], title = title).embedded())
             tables.append(dict(table=d, title=title))                          

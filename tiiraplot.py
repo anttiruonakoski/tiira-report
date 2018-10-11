@@ -18,6 +18,8 @@ from bokeh.models import ColumnDataSource, LabelSet
 from bokeh.layouts import column
 from bokeh.resources import CDN
 from bokeh.embed import file_html, components
+from bokeh.transform import linear_cmap
+import colorcet as cc
 
 class Chart(object):
 
@@ -60,6 +62,8 @@ class SumChart(Chart):
         sourcehigh = ColumnDataSource(high)
         sourcelow = ColumnDataSource(low)
 
+        mapper = linear_cmap(field_name=X, palette=cc.blues, low=0 , high=max*0.9)
+
         lajit = source.data['laji'].tolist()[::-1]
 
         p = figure(plot_width = 640, plot_height = 400, x_axis_type='linear', title = title, y_range=lajit)
@@ -76,7 +80,7 @@ class SumChart(Chart):
         p.xaxis.minor_tick_line_color = None
         p.ygrid.grid_line_color = None
         p.toolbar.active_drag = None
-        p.hbar(y='laji', right=X, left=0, height=0.75, source=source)
+        p.hbar(y='laji', right=X, left=0, height=0.75, source=source, color=mapper)
         p.add_layout(labels)
         p.add_layout(labelshigh)
 

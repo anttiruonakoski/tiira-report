@@ -23,7 +23,6 @@ cp = path.dirname(path.abspath(__file__))
 def absname(filename):
     return path.join(cp, filename)
     
-    
 URL = 'https://www.tiira.fi'
 ALKU = '/csv_omat.php?laji=&valtkun=&'
 
@@ -133,7 +132,7 @@ def download_period(days, session):
 
     return csv.text
 
-def main(days_past, csv_filename):
+def main(days_past, csv_filename='tiira.csv'):
 
     credentials = {
             'TUNNUS': '',
@@ -157,7 +156,7 @@ def main(days_past, csv_filename):
                 time.sleep(wait) 
                 session = new_session(credentials)
             else:
-                with open (absname(csv_filename), 'w', newline='\n') as f:
+                with open(csv_filename, 'w', newline='\n') as f:
                     csv_unescaped = html.unescape(csv)
                     csv_unix_newlines = '\n'.join(csv_unescaped.splitlines())
                     f.write(csv_unix_newlines)
