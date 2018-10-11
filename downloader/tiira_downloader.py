@@ -44,6 +44,7 @@ days_past = 7 # default downloaded period in days
 def login(credentials, session):
 
     #kirjaudutaan ja noudetaan eväste  
+    # Va,ka blu-users. Connect ja send:
     url = URL + '/index.php'
     post_data = {
         'tunnus': credentials['TUNNUS'],
