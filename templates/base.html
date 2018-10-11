@@ -2,22 +2,34 @@
 <html lang="en">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="../static/css/style_0.css" type="text/css"/>
+    <link rel="stylesheet" href="../static/css/style_1.css" type="text/css"/>
+    <link rel="stylesheet" href="../static/css/style_2.css" type="text/css"/>
+
     <link href="https://cdn.pydata.org/bokeh/release/bokeh-0.13.0.min.css" rel="stylesheet" type="text/css">
     <script src="https://cdn.pydata.org/bokeh/release/bokeh-0.13.0.min.js"></script>
-    {% for figure in figures %}
+    {% for figure in data.figures %}
         {{ figure.script | safe }}
     {% endfor %}    
     <title>Tiira-raportti</title>
 </head>
-<body>
-    <div id="header">Otsikko</div> 		
-    <div id="content">alku</div>
-    {% for figure in figures %}
-    <div>taulukko / kuva</div>
-        {{ figure.div | safe }}
-    {% endfor %}      
-    <div id="footer">
+<body>	
+    <div id="primary" class="site-content"> 
+        <div id="content" class="entry-content">
+        {% for figure in data.figures[:2] %}
+            <p>{{ figure.div | safe }}</p>
+        {% endfor %}
+            <p>{{ data.tables[0]}}</p>
+        {% for figure in data.figures[2:] %}
+            <p>
+                {{ figure.div | safe }}
+            </p>
+        {% endfor %}
+        <p>
+            {{ data.tables[1]}}
+        </p>
+        </div>
+        </div>
     </div>
 </body>
 </html>

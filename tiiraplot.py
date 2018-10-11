@@ -17,63 +17,76 @@ from bokeh.io import show, output_file, save
 from bokeh.models import ColumnDataSource, LabelSet
 from bokeh.layouts import column
 from bokeh.resources import CDN
-from bokeh.embed import file_html
+from bokeh.embed import file_html, components
 
-class Chart(object)
+class Chart(object):
 
     def __init__(self):
-        self.data = data
-        self.plot = plot
+        pass
         
-    def embedded ():
+    def embedded (self):
         script, div = components(self.plot)
         return script, div
 
-    def html():
+    def html(self):
         return file_html(self.plot, CDN, "Tiira")
 
 
-class SumChart(Chart)
+class SumChart(Chart):
 
-    def __init__(self):
+    def __init__(self, data, title):
         self.data = data
-        p = []
+        self.title = title
+        self.plot = self.make()
 
+    def make(self): 
+
+        data = self.data
+        title = self.title
+
+        X = list(data)[1] # X-axle data
+        Y = list(data)[0] # Y-axle data
+
+        #print(data) 
         source = ColumnDataSource(data)
 
-        high = data[data['Määrä'] > data['Määrä'].quantile(.9)]
-        low = data[data['Määrä'] <= data['Määrä'].quantile(.9)]
+        high = data[data[X] > data[X].quantile(.9)]
+        low = data[data[X] <= data[X].quantile(.9)]
+        max = data[X].max()
+        x_offset = -len(str(int(max)))*7.5
 
         sourcehigh = ColumnDataSource(high)
         sourcelow = ColumnDataSource(low)
 
-        lajit = source.data['Laji'].tolist()[::-1]
-        title = f'Tiiraan ilmoitettua yksilöä, viimeiset {period} päivää'
+        lajit = source.data['laji'].tolist()[::-1]
 
-        p.append(figure(plot_width = 640, plot_height = 500, x_axis_type='linear',
-                title = title,
-                y_range=lajit))
+        p = figure(plot_width = 640, plot_height = 400, x_axis_type='linear', title = title, y_range=lajit)
 
-        labels = LabelSet(x='Määrä', y='Laji', text='Määrä', level='glyph',x_offset=5, source=sourcelow, text_font_size='8pt', text_baseline='middle')
-        labelshigh = LabelSet(x='Määrä', y='Laji', text='Määrä', level='glyph',x_offset=-30, source=sourcehigh, text_font_size='8pt', text_baseline='middle', text_color='#FFFFFF')
+        labels = LabelSet(x=X, y='laji', text=X, level='glyph',x_offset=4, source=sourcelow, text_font_size='8pt', text_baseline='middle')
+        labelshigh = LabelSet(x=X, y='laji', text=X, level='glyph', x_offset=x_offset, source=sourcehigh, text_font_size='8pt', text_baseline='middle', text_color='#FFFFFF')
         
         #visual
-        p[key].x_range.start = 0
-        p[key].toolbar.logo = None
-        p[key].toolbar_location = None
-        p[key].yaxis.major_tick_line_color = None  # turn off y-axis major ticks
-        p[key].yaxis.minor_tick_line_color = None
-        p[key].xaxis.minor_tick_line_color = None
-        p[key].ygrid.grid_line_color = None
-        p[key].toolbar.active_drag = None
-        p[key].hbar(y='Laji', right='Määrä', left=0, height=0.75, source=source)
-        p[key].add_layout(labels)
-        p[key].add_layout(labelshigh)
+        p.x_range.start = 0
+        p.toolbar.logo = None
+        p.toolbar_location = None
+        p.yaxis.major_tick_line_color = None  # turn off y-axis major ticks
+        p.yaxis.minor_tick_line_color = None
+        p.xaxis.minor_tick_line_color = None
+        p.ygrid.grid_line_color = None
+        p.toolbar.active_drag = None
+        p.hbar(y='laji', right=X, left=0, height=0.75, source=source)
+        p.add_layout(labels)
+        p.add_layout(labelshigh)
 
+        return p
 
+class SubmitterTable(Chart):
 
-
-class SubmitterTable(Chart, data)
+    def __init__(self, data, title):
+        self.data = data
+        self.title = title
+        self.plot = self.make()
+        pass
 
 if __name__ == "__main__":
 

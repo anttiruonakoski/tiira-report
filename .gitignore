@@ -9,4 +9,6 @@ downloader/credentials.txt
 .vscode
 tmp/*
 scratch*
+__pycache__
+__pycache__/*
 

@@ -21,7 +21,7 @@ import argparse, sys
 def read_csv(csv_file='downloader/tiira.csv'):
 
     def finnish_date_converter(x):
-        """convert Finnish date format dd.mm.yyyy t ISO-8601"""
+        """convert Finnish date format dd.mm.yyyy to ISO-8601"""
         if x:  
             return pd.to_datetime(x, format='%d.%m.%Y')
 
@@ -38,6 +38,9 @@ def begin_time(days):
 
 def recentdays(days=7):
     return df['Tallennusaika'] > begin_time(days)
+
+def filter_submit_period(df, days=7):
+    return df[df['Tallennusaika'] > begin_time(days)]    
    
 def groupbylaji(df):
     f = df.groupby(['Laji'], as_index=False, sort=False).agg({'Määrä': sum, 'Havainto id': 'count'})
@@ -45,10 +48,11 @@ def groupbylaji(df):
     return f
 
 def groupbysubmitter(df):
-    f = df.groupby(['Tallentaja'], as_index=True, sort=False).agg({'Havainto id': 'count'})
+    f = df.groupby(['Tallentaja'], as_index=False, sort=False).agg({'Havainto id': 'count'})
+    f.columns = ['tallentaja', 'havaintoa']
     return f    
 
-def sort(df,sortkey):
+def sort(df, sortkey):
     return df.sort_values(by=[sortkey],ascending=False);
 
 if __name__ == "__main__":
@@ -66,7 +70,7 @@ if __name__ == "__main__":
 
     h = df[recentdays(args.days)] \
                                 .pipe(groupbylaji) \
-                                .pipe(sort, sortkey='yksilosumma')
+                                .pipe(sort, sortkey='yksilosumma').head(20)
 
     t = df[recentdays(args.days)] \
                                 .pipe(groupbysubmitter) \
@@ -79,7 +83,7 @@ if __name__ == "__main__":
     print(f'{args.days} days\n',
         desc)
       
-    print(h.head(2), h.tail(2), t.head(10)) 
+    print(h.head(10), h.tail(2), t.head(10)) 
 
     #print (df.loc[df[''].isna()].filter(items=['Havainto id', 'Laji', 'Määrä']))    
    
