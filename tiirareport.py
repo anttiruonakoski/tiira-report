@@ -43,6 +43,49 @@ class Report(object):
         output = template.render(data=self.data)
         return output
 
+def main(df):
+        
+        plotdata = {}
+        figures, tables = [], []
+
+        #ACTUAL PLOTTING    
+        #sort keys yksilosumma, havaintorivisumma
+        #
+        columns = {
+            'havainnot': ['havaintorivisumma', 'Tiiraan ilmotettua havaintoriviä, viimeiset '],
+            'yksilot':  ['yksilosumma', 'Tiiraan ilmotettua yksilöä, viimeiset ']
+        }
+        for days in [7, 30]:
+            for key, value in columns.items():    
+                plotkey = str(days) + key   
+                x = df.pipe(filter_submit_period, days=days) \
+                                            .pipe(groupbylaji) \
+                                            .pipe(sort, sortkey=value[0]).head(15) 
+                #drop all columns but laji and aggregate                            
+                plotdata[plotkey] = x[['laji', value[0]]]
+                title = value[1] + str(days) + ' päivää'
+
+                s,d = (SumChart(data = plotdata[plotkey], title = title).embedded())
+                figures.append(dict(script=s, div=d))
+
+            plotdata[str(days) + 'tallentajat'] = df.pipe(filter_submit_period, days=days) \
+                                    .pipe(groupbysubmitter) \
+                                    .pipe(sort, sortkey='havaintoriviä').head(5)
+
+            title = 'Ahkerimmat havaintojen tallentajat, viimeiset ' + str(days) + ' päivää'
+            d = pd.DataFrame.to_html(plotdata[str(days) + 'tallentajat'], index=False, classes='submittertable')
+            #s,d = (TableChart(data = plotdata[str(days) + 'tallentajat'], title = title).embedded())
+            tables.append(dict(table=d, title=title))                          
+
+        report = Report(figures, tables, datetime.now().strftime("%d.%m.%Y klo %H:%M")).compose()
+
+        try:
+            with open ('reports/report.html', 'w') as r:
+                r.write(report)
+            print(datetime.now(), 'raportti valmis') 
+        except Exception as e:
+            sys.exit(1)       
+
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description="Generate a datetime limited pandas.py dataframe")
@@ -55,47 +98,7 @@ if __name__ == "__main__":
     except IOError as e:
         print(f'virhe tiedoston {args.filename} avaamisessa', e)
         sys.exit(1)
+    main(df) 
 
-    plotdata = {}
-    figures, tables = [], []
-
-    #ACTUAL PLOTTING    
-    #sort keys yksilosumma, havaintorivisumma
-    #
-    columns = {
-        'havainnot': ['havaintorivisumma', 'Tiiraan ilmotettua havaintoriviä, viimeiset '],
-        'yksilot':  ['yksilosumma', 'Tiiraan ilmotettua yksilöä, viimeiset ']
-    }
-    for days in [7, 30]:
-        for key, value in columns.items():    
-            plotkey = str(days) + key   
-            x = df.pipe(filter_submit_period, days=days) \
-                                        .pipe(groupbylaji) \
-                                        .pipe(sort, sortkey=value[0]).head(15) 
-            #drop all columns but laji and aggregate                            
-            plotdata[plotkey] = x[['laji', value[0]]]
-            title = value[1] + str(days) + ' päivää'
-
-            s,d = (SumChart(data = plotdata[plotkey], title = title).embedded())
-            figures.append(dict(script=s, div=d))
-
-        plotdata[str(days) + 'tallentajat'] = df.pipe(filter_submit_period, days=days) \
-                                .pipe(groupbysubmitter) \
-                                .pipe(sort, sortkey='havaintoriviä').head(5)
-
-        title = 'Ahkerimmat havaintojen tallentajat, viimeiset ' + str(days) + ' päivää'
-        d = pd.DataFrame.to_html(plotdata[str(days) + 'tallentajat'], index=False, classes='submittertable')
-        #s,d = (TableChart(data = plotdata[str(days) + 'tallentajat'], title = title).embedded())
-        tables.append(dict(table=d, title=title))                          
-
-    report = Report(figures, tables, datetime.now().strftime("%d.%m.%Y klo %H:%M")).compose()
-
-    try:
-        with open ('reports/report.html', 'w') as r:
-            r.write(report)
-        print(datetime.now(), 'raportti valmis') 
-    except Exception as e:
-        sys.exit(1)       
-       
 # <3 pandas & bokeh      
 

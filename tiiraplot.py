@@ -29,8 +29,10 @@ class Chart(object):
         return script, div
 
     def html(self):
-        return file_html(self.plot, CDN, "Tiira")
-
+        # Set to output the plot in the notebook 
+        filename = 'x.html'
+        output_file(filename, title='Bokeh Plot', mode='cdn', root_dir=None)
+        save(self.plot)
 
 class SumChart(Chart):
 
@@ -89,9 +91,7 @@ class SubmitterTable(Chart):
         pass
 
 if __name__ == "__main__":
+    pass
 
-    # Set to output the plot in the notebook
-
-    filename = 'x.html'
-    output_file(filename, title='Bokeh Plot', mode='cdn', root_dir=None)
-    save(p)
+    
+    

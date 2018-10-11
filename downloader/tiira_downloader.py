@@ -23,6 +23,7 @@ cp = path.dirname(path.abspath(__file__))
 def absname(filename):
     return path.join(cp, filename)
     
+    
 URL = 'https://www.tiira.fi'
 ALKU = '/csv_omat.php?laji=&valtkun=&'
 
@@ -62,7 +63,7 @@ def login(credentials, session):
 def new_session(credentials):
     s = requests.session()             
     try:    
-        if time.time() - path.getmtime('cookiefile') > 600:
+        if time.time() - path.getmtime(absname('cookiefile')) > 600:
             print(datetime.now(),'\tYli 10 minuuttia vanha istunto. Kirjaudutaan uuteen istuntoon.')
             login(credentials, s)
             with open(absname('cookiefile'), 'wb') as f:
@@ -71,8 +72,8 @@ def new_session(credentials):
             with open(absname('cookiefile'), 'rb') as f:                
                 cookies = pickle.load(f)
                 s.cookies = cookies
-    except IOError: 
-        print(datetime.now(),'\tEi tiedostoa \'cookiefile\'. Kirjaudutaan uuteen istuntoon.')
+    except IOError as e: 
+        print(datetime.now(),'\tEi tiedostoa \'cookiefile\'. Kirjaudutaan uuteen istuntoon.', e)
         login(credentials, s)
         with open(absname('cookiefile'), 'wb') as f:
             pickle.dump(s.cookies, f)
@@ -156,7 +157,7 @@ def main(days_past, csv_filename):
                 time.sleep(wait) 
                 session = new_session(credentials)
             else:
-                with open (csv_filename, 'w', newline='\n') as f:
+                with open (absname(csv_filename), 'w', newline='\n') as f:
                     csv_unescaped = html.unescape(csv)
                     csv_unix_newlines = '\n'.join(csv_unescaped.splitlines())
                     f.write(csv_unix_newlines)
