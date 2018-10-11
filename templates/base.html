@@ -5,15 +5,18 @@
     <link rel="stylesheet" href="style.css" />
     <link href="https://cdn.pydata.org/bokeh/release/bokeh-0.13.0.min.css" rel="stylesheet" type="text/css">
     <script src="https://cdn.pydata.org/bokeh/release/bokeh-0.13.0.min.js"></script>
-    {{ data.script }}
-    <title></title>
-
+    {% for figure in figures %}
+        {{ figure.script | safe }}
+    {% endfor %}    
+    <title>Tiira-raportti</title>
 </head>
 <body>
-    <div id="header">Hello World</div> 		
+    <div id="header">Otsikko</div> 		
     <div id="content">alku</div>
-    {{ data.div }}
-    <div>kertaalleen</div>  
+    {% for figure in figures %}
+    <div>taulukko / kuva</div>
+        {{ figure.div | safe }}
+    {% endfor %}      
     <div id="footer">
     </div>
 </body>

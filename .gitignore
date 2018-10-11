@@ -1,3 +1,4 @@
+*.csv
 downloader/*
 downloader/credentials.txt
 !downloader/*.csv

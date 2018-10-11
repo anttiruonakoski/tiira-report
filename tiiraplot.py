@@ -19,14 +19,25 @@ from bokeh.layouts import column
 from bokeh.resources import CDN
 from bokeh.embed import file_html
 
-class SumChart()
+class Chart(object)
 
-    p = []
-    periods = {0:7,1:30}
-
-    for key,period in periods.items():
+    def __init__(self):
+        self.data = data
+        self.plot = plot
         
-        data = timeframe(df,period).groupby(['Laji'], as_index=False, sort=False)[["Määrä"]].sum().sort_values(by=['Määrä'],ascending=False).head(25)
+    def embedded ():
+        script, div = components(self.plot)
+        return script, div
+
+    def html():
+        return file_html(self.plot, CDN, "Tiira")
+
+
+class SumChart(Chart)
+
+    def __init__(self):
+        self.data = data
+        p = []
 
         source = ColumnDataSource(data)
 
@@ -59,7 +70,10 @@ class SumChart()
         p[key].add_layout(labels)
         p[key].add_layout(labelshigh)
 
-class SubmitterTable()
+
+
+
+class SubmitterTable(Chart, data)
 
 if __name__ == "__main__":
 

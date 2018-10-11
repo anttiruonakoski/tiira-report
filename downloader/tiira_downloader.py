@@ -1,13 +1,28 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
+"""tiiradownloader.py: Authenticate and download a csv-file from tiira.fi."""
+
+__author__ = "Antti Ruonakoski"
+__copyright__ = "Copyright 2018"
+__credits__ = ["Antti Ruonakoski"]
+__license__ = "MIT"
+__version__ = ""
+__maintainer__ = "Antti Ruonakoski"
+__email__ = "aruonakoski@gmail.com"
+__status__ = "Development"
+
 from os import remove, path
 import time, sys, html, re
 import requests, pickle, argparse
 from datetime import datetime, timedelta
 
 wait = 5
+cp = path.dirname(path.abspath(__file__))
 
+def absname(filename):
+    return path.join(cp, filename)
+    
 URL = 'https://www.tiira.fi'
 ALKU = '/csv_omat.php?laji=&valtkun=&'
 
@@ -49,16 +64,16 @@ def new_session(credentials):
         if time.time() - path.getmtime('cookiefile') > 600:
             print(datetime.now(),'\tYli 10 minuuttia vanha istunto. Kirjaudutaan uuteen istuntoon.')
             login(credentials, s)
-            with open('cookiefile', 'wb') as f:
+            with open(absname('cookiefile'), 'wb') as f:
                 pickle.dump(s.cookies, f)
         else:        
-            with open('cookiefile', 'rb') as f:                
+            with open(absname('cookiefile'), 'rb') as f:                
                 cookies = pickle.load(f)
                 s.cookies = cookies
     except IOError: 
         print(datetime.now(),'\tEi tiedostoa \'cookiefile\'. Kirjaudutaan uuteen istuntoon.')
         login(credentials, s)
-        with open('cookiefile', 'wb') as f:
+        with open(absname('cookiefile'), 'wb') as f:
             pickle.dump(s.cookies, f)
     return s    
 
@@ -80,8 +95,7 @@ def download_period(days, session):
     delta = timedelta(days=days)
     start = now - delta
     TALLENNUS_ALKUPVM = f'{start:%d.%m.%Y}'
-    #TALLENNUS_LOPPUPVM=LOPPUPVM+str(vuosi)
-    TALLENNUS_LOPPUPVM=''
+    TALLENNUS_LOPPUPVM = ''
     
     print(datetime.now(),"\talkupvm ", TALLENNUS_ALKUPVM, "loppupvm ", TALLENNUS_LOPPUPVM)
     
@@ -101,12 +115,12 @@ def download_period(days, session):
     url = ''.join(url_parts)
 
     try:
-        csv_raaka = session.get(url)
+        csv_raw = session.get(url)
     except Exception as e:
         print (e)
 
     filepattern = 'omatcsvt\/.*.txt'
-    downloadable_file = (re.findall(filepattern,csv_raaka.text)) #omatcsvt/124_csv_YJ4ofuUwsp.txt
+    downloadable_file = (re.findall(filepattern,csv_raw.text)) #omatcsvt/124_csv_YJ4ofuUwsp.txt
     url = URL + '/' + downloadable_file[0]
     print('lopullinen latausurl ',url)
 
@@ -117,32 +131,14 @@ def download_period(days, session):
 
     return csv.text
 
-# #				tutkitaan palautuvasta html-tiedostosta csv-tiedoston nimi
-#     print(csv_raaka)
-#     csv_loppu=csv_raaka.rpartition('=')
-#     csv_file=csv_loppu[2].rpartition('"')
-#     print(csv_file[0]," Haetaan kohta")
-#     time.sleep(10)
-# #ladataan csv-tiedosto
-#     TALLENNUSNIMI='tiira_lly_'+str(vuosi)+'_tal.csv'
-#     print(TALLENNUSNIMI)
-#     wget_args=['wget', ' -q -O ',TALLENNUSNIMI,' --load-cookie cookies.txt ', URL,'/',csv_file[0] ] 
-#     osa3=''.join(wget_args)
-#     print(osa3)
-#     output=popen(osa3)	
-#     output.close
-#     time.sleep(0)
-#     print("VUOSI",str(vuosi),"VALMIS! \n")
-#     time.sleep (135)
-#     print("KAIKKI LADATTTU"  )  
-
 def main(days_past, csv_filename):
 
     credentials = {
             'TUNNUS': '',
             'SALASANA': ''    
-        }
-    with open('credentials.txt','r') as fp:
+        }    
+    
+    with open(absname('credentials.txt'),'r') as fp:
         for i in ['TUNNUS','SALASANA']:
             credentials[i] = fp.readline().strip()
 
@@ -154,8 +150,8 @@ def main(days_past, csv_filename):
             csv = download_period(days_past, session)
             if len(csv.split('\r\n', 1)[0]) < 380 or len(csv.split('\r\n', 1)[0]) > 410:
                 # LRCF newlines 
-                # normal line length for 1st line is 391, depends on linefeed characters. allows minor csv-format change
-                print(datetime.now(),'\tViallinen csv-tiedosto tai vanhentunut istunto. Kirjaudutaan ja yritetään uudelleen. kerta: ' ,chance)
+                # normal tiira csv-file first line length for 1st line is 391, depends on linefeed characters. allows minor csv-format change
+                print(datetime.now(),'\tViallinen csv-tiedosto tai vanhentunut istunto. Kirjaudutaan ja yritetään uudelleen. kerta: ', chance)
                 time.sleep(wait) 
                 session = new_session(credentials)
             else:
@@ -166,6 +162,7 @@ def main(days_past, csv_filename):
                     #converts newlines
                     #converts to utf-8 because it's native text write encoding in Python. 
                     #html entities such as emojis should be unescaped
+                    #tbd check malformed rows (extra '#' inputted in tiira text field). doesn't matter with pandas csv impoter, but effects SQL copy commands
                     print (datetime.now(), '\tcsv-tiedosto tallennettu onnistuneesti')
                 break               
         except Exception as e:
@@ -176,8 +173,8 @@ def main(days_past, csv_filename):
 
 if __name__ == "__main__":
     
-    parser = argparse.ArgumentParser(description="Autenthicate at tiira.fi and download csv-file")
-    parser.add_argument("-d", "--days", type=int, help="download days past (default 7)", default=7)
-    parser.add_argument("-f", "--filename", type=str, help="downloaded file name (default tiira.csv)", default="tiira.csv")
+    parser = argparse.ArgumentParser(description="Kirjaantuu Tiiraan ja lataa csv-tiedoston tallennusajan mukaan")
+    parser.add_argument("-d", "--days", type=int, help="kuinka monta päivää taaksepäin nykyhetkestä  (oletus 7)", default=7)
+    parser.add_argument("-f", "--filename", type=str, help="ladattavan tiedoston nimi (default tiira.csv)", default="tiira.csv")
     args = parser.parse_args()
     main(days_past=args.days, csv_filename=args.filename)
