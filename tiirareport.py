@@ -30,10 +30,11 @@ from tiiraplot import *
 
 class Report(object):
 
-    def __init__(self, figures, tables):          
+    def __init__(self, figures, tables, updated):          
         self.figures = figures
         self.tables = tables
-        self.data = dict(figures=figures, tables=tables)
+        self.updated = updated
+        self.data = dict(figures=figures, tables=tables, updated=updated)
         
     def compose(self):    
         file_loader = FileSystemLoader('templates')
@@ -67,7 +68,6 @@ if __name__ == "__main__":
     }
     for days in [7, 30]:
         for key, value in columns.items():    
-            print(key, value[0])
             plotkey = str(days) + key   
             x = df.pipe(filter_submit_period, days=days) \
                                         .pipe(groupbylaji) \
@@ -77,25 +77,25 @@ if __name__ == "__main__":
             title = value[1] + str(days) + ' päivää'
 
             s,d = (SumChart(data = plotdata[plotkey], title = title).embedded())
-            figures.append(dict(script=s,div=d))
+            figures.append(dict(script=s, div=d))
 
         plotdata[str(days) + 'tallentajat'] = df.pipe(filter_submit_period, days=days) \
                                 .pipe(groupbysubmitter) \
-                                .pipe(sort, sortkey='havaintoa').head(5)
+                                .pipe(sort, sortkey='havaintoriviä').head(5)
 
         title = 'Ahkerimmat havaintojen tallentajat, viimeiset ' + str(days) + ' päivää'
-        d = pd.DataFrame.to_html(plotdata[str(days) + 'tallentajat'], index=False)
+        d = pd.DataFrame.to_html(plotdata[str(days) + 'tallentajat'], index=False, classes='submittertable')
         #s,d = (TableChart(data = plotdata[str(days) + 'tallentajat'], title = title).embedded())
-        tables.append(d)                    
+        tables.append(dict(table=d, title=title))                          
 
-    # print (plotdata['30havainnot']) 
-    # d = plotdata['30havainnot'].describe(include='all')                             
-    # print (d)                              
+    report = Report(figures, tables, datetime.now().strftime("%d.%m.%Y klo %H:%M")).compose()
 
-    report = Report(figures, tables).compose()
-
-    with open ('reports/report.html', 'w') as r:
-       r.write(report)
-
+    try:
+        with open ('reports/report.html', 'w') as r:
+            r.write(report)
+        print(datetime.now(), 'raportti valmis') 
+    except Exception as e:
+        sys.exit(1)       
+       
 # <3 pandas & bokeh      
 

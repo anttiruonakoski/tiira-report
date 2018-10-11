@@ -13,20 +13,29 @@
     {% endfor %}    
     <title>Tiira-raportti</title>
 </head>
-<body>	
+<body class="home page-template-default page page-id-40 page-parent logged-in admin-bar custom-background ecwd-theme-parent-iconic-one ecwd-theme-child-iconic-one-child custom-font-enabled customize-support">	
     <div id="primary" class="site-content"> 
         <div id="content" class="entry-content">
+
+        <a href="#viikko"><h3>Viikon ajalta</h3></a>    
         {% for figure in data.figures[:2] %}
             <p>{{ figure.div | safe }}</p>
         {% endfor %}
-            <p>{{ data.tables[0]}}</p>
+            <h5>{{ data.tables[0].title }}</h5>
+            <p>{{ data.tables[0].table}}</p>
+        
+        <a href="#30pv"><h3>30 päivän ajalta</h3></a>      
         {% for figure in data.figures[2:] %}
             <p>
                 {{ figure.div | safe }}
             </p>
         {% endfor %}
+        <h5>{{ data.tables[1].title }}</h5>
         <p>
-            {{ data.tables[1]}}
+            {{ data.tables[1].table}}
+        </p>
+        <p>
+            Päivitetty {{ data.updated }}
         </p>
         </div>
         </div>

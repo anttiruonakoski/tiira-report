@@ -49,7 +49,7 @@ def groupbylaji(df):
 
 def groupbysubmitter(df):
     f = df.groupby(['Tallentaja'], as_index=False, sort=False).agg({'Havainto id': 'count'})
-    f.columns = ['tallentaja', 'havaintoa']
+    f.columns = ['tallentaja', 'havaintoriviä']
     return f    
 
 def sort(df, sortkey):

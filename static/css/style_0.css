@@ -45,6 +45,10 @@ p.nohyphen {
   	hyphens: none;
 }
 
+.submittertable {
+    width: 40%!important
+}
+
 /* yhteisen kokeilusivun tyylikokeiluja
 
 .page-id-730 .site-content {
