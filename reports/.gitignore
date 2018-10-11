@@ -1,7 +1,7 @@
 *.csv
 downloader/*
 downloader/credentials.txt
-!downloader/testidata_u_07102018.csv
+!downloader/*.csv
 !downloader/*.py
 *checkpoint*
 .ipynb_checkpoints/*
