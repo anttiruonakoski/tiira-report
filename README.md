@@ -7,7 +7,7 @@ Python must be version 3.6 or greater.
 `pip3 install -r requirements.txt` 
 
 #### After Installation
-`cp downloader/credentials.example credentials`
+`cp downloader/credentials.example credentials`  
 Input correct credentials
 
 #### Usage
