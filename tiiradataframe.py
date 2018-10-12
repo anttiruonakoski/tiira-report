@@ -68,13 +68,15 @@ if __name__ == "__main__":
         print(f'virhe tiedoston {args.filename} avaamisessa', e)
         sys.exit(1)
 
+    #below just for testing functions
+
     h = df[recentdays(args.days)] \
                                 .pipe(groupbylaji) \
                                 .pipe(sort, sortkey='yksilosumma').head(20)
 
     t = df[recentdays(args.days)] \
                                 .pipe(groupbysubmitter) \
-                                .pipe(sort, sortkey='Havainto id')
+                                .pipe(sort, sortkey='havaintoriviä')
 
     desc = df.describe(include=[np.number,np.datetime64])
 

@@ -1,1 +1,3 @@
 *.ipynb linguist-documentation
+#default host page css
+/static/css/style_*.css linguist-vendored
