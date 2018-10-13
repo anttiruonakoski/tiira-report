@@ -11,7 +11,7 @@ __maintainer__ = "Antti Ruonakoski"
 __email__ = "aruonakoski@gmail.com"
 __status__ = "Development"
 
-template_file_name = 'base.html'
+template_file_name = 'lly_report.html'
 
 from jinja2 import Environment, FileSystemLoader
 import numpy as np
