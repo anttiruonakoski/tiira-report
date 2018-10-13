@@ -45,9 +45,30 @@ p.nohyphen {
   	hyphens: none;
 }
 
-.submittertable {
-    width: 40%!important
+#.submittertable {
+#    width: 100%!important
+#}
+
+.submittertablecontainer {
+    width: 50%;
+    margin-right: 12px;
 }
+
+.mapcontainer {
+    margin-left: 12px;
+    width: 50%;
+    border-style: solid;
+}
+
+.map {
+    width: 100%;
+    height: 400px;
+    background-color: #EBFFA6; 
+}
+
+.container {
+    display: flex; /* or inline-flex */
+  }
 
 /* yhteisen kokeilusivun tyylikokeiluja
 
