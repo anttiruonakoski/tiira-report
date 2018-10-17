@@ -18,15 +18,17 @@ import numpy as np
 import pandas as pd
 import argparse, sys
 
-from bokeh.plotting import figure
-from bokeh.io import show, output_file, save
-from bokeh.models import ColumnDataSource, LabelSet
-from bokeh.layouts import column
-from bokeh.resources import CDN
-from bokeh.embed import file_html
+# from bokeh.plotting import figure
+# from bokeh.io import show, output_file, save
+# from bokeh.models import ColumnDataSource, LabelSet
+# from bokeh.layouts import column
+# from bokeh.resources import CDN
+# from bokeh.embed import file_html
 
 from tiiradataframe import *
 from tiiraplot import *
+from tiiramap import *
+
 
 class Report(object):
 
@@ -79,6 +81,15 @@ def main(df):
 
         report = Report(figures, tables, datetime.now().strftime("%d.%m.%Y klo %H:%M")).compose()
 
+        # maps 
+        gdf = df.pipe(addgeometries, observation_location=True)
+        
+        for days in [7, 30]:
+            mapdata = gdf.pipe(filter_submit_period, days=days)
+            map_filename = f'lly_{days}_days.png'
+            map = Map().plot(mapdata, map_filename)
+        print(datetime.now(), 'kartat valmiit')
+
         try:
             with open ('reports/report.html', 'w') as r:
                 r.write(report)
@@ -100,5 +111,5 @@ if __name__ == "__main__":
         sys.exit(1)
     main(df) 
 
-# <3 pandas & bokeh      
+# <3 pandas & bokeh & jinja2     
 

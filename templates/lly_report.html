@@ -26,10 +26,10 @@
                 <div class="submittertablecontainer"> <h5>{{ data.tables[0].title }}</h5> {{ data.tables[0].table}}</div>
         
                 <div class="mapcontainer"><h5>
-                    kartta 7 päivää
+                    Havaintojen sijoittuminen 7 päivän aikana
                 </h5>
-                <div class="map">o</div>   
-
+                <div class="map"><img src="../reports/maps/lly_7_days.png"></div>   
+                
                 </div>
     
         </div>    
@@ -42,7 +42,6 @@
         {% endfor %}
       
 
-         
             
         <div class="container">
     
@@ -50,16 +49,22 @@
     
             <div class="mapcontainer">
                 <h5>
-                    kartta 30 päivää
+                    Havaintojen sijoittuminen 30 päivän aikana
                 </h5>
-                <div class="map"><p>kartta</p></div>            
+                <div class="map"><img src="../reports/maps/lly_30_days.png"></div>          
             </div>          
             
         </div> 
-        <div>
+        <div class="report-footer">
+                
                 <p>
-                Päivitetty {{ data.updated }}
-                </p>
+                Päivitetty {{ data.updated }} <br/>
+                Kaaviot ja kartat © Lapin lintutieteellinen yhdistys ry
+                </p>        
+                <p>
+                    <small>pohjakartan tiedot Maanmittauslaitos 2018, European Environment Agency</small>
+                </p> 
+                
         </div>
     </div>
 </body>

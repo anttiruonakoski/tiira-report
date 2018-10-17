@@ -16,6 +16,8 @@ from datetime import datetime, timedelta
 import numpy as np
 import pandas as pd
 import argparse, sys
+import geopandas
+from shapely.geometry import Point
 # Va,ka blu-users. Connect ja send:
 
 def read_csv(csv_file='downloader/tiira.csv'):
@@ -54,6 +56,15 @@ def groupbysubmitter(df):
 
 def sort(df, sortkey):
     return df.sort_values(by=[sortkey],ascending=False);
+
+def addgeometries(df, observation_location):
+
+    # bird_location not implemented
+    if observation_location: 
+        df['Coordinates'] = list(zip(df['X-koord'], df['Y-koord']))
+        df['Coordinates'] = df['Coordinates'].apply(Point)
+        gdf = geopandas.GeoDataFrame(df, geometry='Coordinates')   
+    return gdf
 
 if __name__ == "__main__":
 
