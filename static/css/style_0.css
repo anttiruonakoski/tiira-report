@@ -45,9 +45,10 @@ p.nohyphen {
   	hyphens: none;
 }
 
-#.submittertable {
-#    width: 100%!important
-#}
+/* .submittertable {
+     width: 100%!important
+}
+*/
 
 .submittertablecontainer {
     width: 42%;

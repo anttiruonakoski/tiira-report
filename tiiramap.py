@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-"""tiiramap.py: plot map form geopandas dataframe."""
+"""tiiramap.py: plot map from geopandas dataframe."""
 
 __author__ = "Antti Ruonakoski"
 __copyright__ = "Copyright 2018"
@@ -30,8 +30,8 @@ class Map(object):
 
         fig, ax = plt.subplots(figsize=(8, 8), dpi=72.0)
         
-        filename = 'static/basemap/lly-tumma-base.tif'
-        with rasterio.open(filename, 'r') as src:
+        basemap = 'static/basemap/lly-tumma-base.tif'
+        with rasterio.open(basemap, 'r') as src:
             array = src.read()
         plt.axis('off')
         ax.axes.get_xaxis().set_visible(False)
@@ -42,13 +42,10 @@ class Map(object):
         gdf.plot(marker='+', color='yellowgreen', markersize=12, alpha=0.4, ax=ax)
         try:
             #dpi different in file and display backends, use display dpi. also some unclear variation of raster img ax size compared with jupyter notebook, which produces 9 px shorter image.
-            plt.savefig('reports/maps/'+self.mapfilename, bbox_inches='tight', pad_inches = 0, dpi=72.0)
+            plt.savefig(self.mapfilename, bbox_inches='tight', pad_inches=0, dpi=72.0)
         except IOError as e:
             print(e)    
         return
-
-if __name__ == "__main__":
-    pass
 
     
     

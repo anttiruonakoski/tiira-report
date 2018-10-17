@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # coding=utf-8
 
-"""tiiradataframe.py: functions for Tiira-specific pandas dataframe"""
+"""tiiradataframe.py: functions for Tiira-specific pandas and geopandas dataframes"""
 
 __author__ = "Antti Ruonakoski"
 __copyright__ = "Copyright 2018"
@@ -57,10 +57,10 @@ def groupbysubmitter(df):
 def sort(df, sortkey):
     return df.sort_values(by=[sortkey],ascending=False);
 
-def addgeometries(df, observation_location):
+def addgeometries(df, observer_location=True):
 
     # bird_location not implemented
-    if observation_location: 
+    if observer_location: 
         df['Coordinates'] = list(zip(df['X-koord'], df['Y-koord']))
         df['Coordinates'] = df['Coordinates'].apply(Point)
         gdf = geopandas.GeoDataFrame(df, geometry='Coordinates')   

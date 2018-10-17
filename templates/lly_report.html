@@ -13,7 +13,7 @@
     {% endfor %}    
     <title>Tiira-raportti</title>
 </head>
-<body class="home page-template-default page page-id-40 page-parent logged-in admin-bar custom-background ecwd-theme-parent-iconic-one ecwd-theme-child-iconic-one-child custom-font-enabled customize-support">	
+<body class="home page-template-default page page-parent custom-background ecwd-theme-parent-iconic-one ecwd-theme-child-iconic-one-child custom-font-enabled customize-support">	
     <div id="content" class="entry-content">
 
         <a name="viikko"><h3>Viikon ajalta</h3></a>    
@@ -23,11 +23,17 @@
 
         <div class="container">
     
-                <div class="submittertablecontainer"> <h5>{{ data.tables[0].title }}</h5> {{ data.tables[0].table}}</div>
+                <div class="submittertablecontainer">
+                    <h5>
+                        {{ data.tables[0].title }}
+                    </h5>
+                    {{ data.tables[0].table}}
+                </div>
         
-                <div class="mapcontainer"><h5>
-                    Havaintojen sijoittuminen 7 päivän aikana
-                </h5>
+                <div class="mapcontainer"> 
+                    <h5>
+                        Havaintojen sijoittuminen 7 päivän aikana
+                    </h5>
                 <div class="map"><img src="../reports/maps/lly_7_days.png"></div>   
                 
                 </div>
@@ -39,13 +45,16 @@
             <p>
                 {{ figure.div | safe }}
             </p>
-        {% endfor %}
+        {% endfor %} 
       
-
-            
         <div class="container">
     
-            <div class="submittertablecontainer"> <h5>{{ data.tables[1].title }}</h5> {{ data.tables[1].table}}</div>
+            <div class="submittertablecontainer">
+                <h5>
+                    {{ data.tables[1].title }}
+                </h5>
+                {{ data.tables[1].table}}
+            </div>
     
             <div class="mapcontainer">
                 <h5>
@@ -58,8 +67,8 @@
         <div class="report-footer">
                 
                 <p>
-                Päivitetty {{ data.updated }} <br/>
-                Kaaviot ja kartat © Lapin lintutieteellinen yhdistys ry
+                    Päivitetty {{ data.updated }} <br/>
+                    Kaaviot ja kartat © Lapin lintutieteellinen yhdistys ry
                 </p>        
                 <p>
                     <small>pohjakartan tiedot Maanmittauslaitos 2018, European Environment Agency</small>

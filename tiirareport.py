@@ -18,17 +18,9 @@ import numpy as np
 import pandas as pd
 import argparse, sys
 
-# from bokeh.plotting import figure
-# from bokeh.io import show, output_file, save
-# from bokeh.models import ColumnDataSource, LabelSet
-# from bokeh.layouts import column
-# from bokeh.resources import CDN
-# from bokeh.embed import file_html
-
 from tiiradataframe import *
 from tiiraplot import *
 from tiiramap import *
-
 
 class Report(object):
 
@@ -50,9 +42,9 @@ def main(df):
         plotdata = {}
         figures, tables = [], []
 
-        #ACTUAL PLOTTING    
+        #REPORT PLOTTING    
         #sort keys yksilosumma, havaintorivisumma
-        #
+        
         columns = {
             'havainnot': ['havaintorivisumma', 'Tiiraan ilmotetut havaintorivit '],
             'yksilot':  ['yksilosumma', 'Tiiraan ilmotetut yksilöt ']
@@ -81,13 +73,13 @@ def main(df):
 
         report = Report(figures, tables, datetime.now().strftime("%d.%m.%Y klo %H:%M")).compose()
 
-        # maps 
-        gdf = df.pipe(addgeometries, observation_location=True)
+        #MAPS PLOTTING 
+        gdf = df.pipe(addgeometries, observer_location=True)
         
         for days in [7, 30]:
             mapdata = gdf.pipe(filter_submit_period, days=days)
             map_filename = f'lly_{days}_days.png'
-            map = Map().plot(mapdata, map_filename)
+            map = Map().plot(mapdata, 'reports/maps/'+map_filename)
         print(datetime.now(), 'kartat valmiit')
 
         try:
