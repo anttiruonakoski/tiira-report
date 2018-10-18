@@ -32,7 +32,7 @@ class Chart(object):
 
     def html(self):
         # Set to output the plot in the notebook 
-        filename = 'x.html'
+        filename = 'tmp/x.html'
         output_file(filename, title='Bokeh Plot', mode='cdn', root_dir=None)
         save(self.plot)
 
