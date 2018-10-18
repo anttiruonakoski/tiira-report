@@ -6,7 +6,8 @@ Components:
 
 - tiiradownloader: download and save data as a csv-file
 
-- tiirareport: generate a web page  
+- tiirareport: generate a web page
+	+ tiiradataframe: functions for Tiira-specific pandas and geopandas dataframes 
 	+ tiiraplot: plot diagrams
 	+ tiiramap: plot maps
 	+ report template: Jinja2 template for report HTML
