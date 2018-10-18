@@ -1,6 +1,6 @@
 ## Tiira-report
 
-Python tools for [Tiira](https://www.tiira.fi) bird observation data reporting and visualization. Illustrative report is published at (https://www.lly.fi/tiira-raportti) 
+Python tools for [Tiira](https://www.tiira.fi) bird observation data reporting and visualization. Illustrative report is published at (https://www.lly.fi/havainnot/tiira-raportti) 
   
 Components:
 
