@@ -13,28 +13,29 @@ __status__ = "Development"
 
 
 from bokeh.plotting import figure
-from bokeh.io import show, output_file, save
+from bokeh.io import output_file, save
 from bokeh.models import ColumnDataSource, LabelSet
-from bokeh.layouts import column
 from bokeh.resources import CDN
 from bokeh.embed import file_html, components
 from bokeh.transform import linear_cmap
 import colorcet as cc
 
+
 class Chart(object):
 
     def __init__(self):
         pass
-        
+
     def embedded(self):
         script, div = components(self.plot)
         return script, div
 
     def html(self):
-        # Set to output the plot in the notebook 
+        # Set to output the plot in the notebook
         filename = 'tmp/x.html'
         output_file(filename, title='Bokeh Plot', mode='cdn', root_dir=None)
         save(self.plot)
+
 
 class SumChart(Chart):
 
@@ -43,15 +44,15 @@ class SumChart(Chart):
         self.title = title
         self.plot = self.make()
 
-    def make(self): 
+    def make(self):
 
         data = self.data
         title = self.title
 
-        X = list(data)[1] # X-axle data
-        Y = list(data)[0] # Y-axle data
+        X = list(data)[1]  # X-axle data
+        Y = list(data)[0]  # Y-axle data
 
-        #print(data) 
+        # print(data)
         source = ColumnDataSource(data)
 
         high = data[data[X] > data[X].quantile(.9)]
@@ -62,16 +63,16 @@ class SumChart(Chart):
         sourcehigh = ColumnDataSource(high)
         sourcelow = ColumnDataSource(low)
 
-        mapper = linear_cmap(field_name=X, palette=cc.blues, low=0 , high=max*0.9)
+        mapper = linear_cmap(field_name=X, palette=cc.blues, low=0, high=max*0.9)
 
         lajit = source.data['laji'].tolist()[::-1]
 
-        p = figure(plot_width = 640, plot_height = 400, x_axis_type='linear', title = title, y_range=lajit)
+        p = figure(plot_width=640, plot_height=400, x_axis_type='linear', title=title, y_range=lajit)
 
-        labels = LabelSet(x=X, y='laji', text=X, level='glyph',x_offset=4, source=sourcelow, text_font_size='8pt', text_baseline='middle')
+        labels = LabelSet(x=X, y='laji', text=X, level='glyph', x_offset=4, source=sourcelow, text_font_size='8pt', text_baseline='middle')
         labelshigh = LabelSet(x=X, y='laji', text=X, level='glyph', x_offset=x_offset, source=sourcehigh, text_font_size='8pt', text_baseline='middle', text_color='#FFFFFF')
-        
-        #visual
+
+        # visual
         p.x_range.start = 0
         p.toolbar.logo = None
         p.toolbar_location = None
@@ -86,6 +87,7 @@ class SumChart(Chart):
 
         return p
 
+
 class SubmitterTable(Chart):
 
     def __init__(self, data, title):
@@ -94,8 +96,6 @@ class SubmitterTable(Chart):
         self.plot = self.make()
         pass
 
+
 if __name__ == "__main__":
     pass
-
-    
-    

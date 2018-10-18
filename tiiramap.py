@@ -12,24 +12,25 @@ __email__ = "aruonakoski@gmail.com"
 __status__ = "Development"
 
 import matplotlib
-matplotlib.use('Agg') # non X display backend
+matplotlib.use('Agg')  # non X display backend
 import matplotlib.pyplot as plt
 from rasterio.plot import show
 import rasterio
+
 
 class Map(object):
 
     def __init__(self):
         pass
-        
+
     def plot(self, data, mapfilename):
 
-        self.data = data    
+        self.data = data
         gdf = self.data
         self.mapfilename = mapfilename
 
         fig, ax = plt.subplots(figsize=(8, 8), dpi=72.0)
-        
+
         basemap = 'static/basemap/lly-tumma-base.tif'
         with rasterio.open(basemap, 'r') as src:
             array = src.read()
@@ -41,11 +42,8 @@ class Map(object):
 
         gdf.plot(marker='+', color='yellowgreen', markersize=12, alpha=0.4, ax=ax)
         try:
-            #dpi different in file and display backends, use display dpi. also some unclear variation of raster img ax size compared with jupyter notebook, which produces 9 px shorter image.
+            # dpi different in file and display backends, use display dpi. also some unclear variation of raster img ax size compared with jupyter notebook, which produces 9 px shorter image.
             plt.savefig(self.mapfilename, bbox_inches='tight', pad_inches=0, dpi=72.0)
         except IOError as e:
-            print(e)    
+            print(e)
         return
-
-    
-    
