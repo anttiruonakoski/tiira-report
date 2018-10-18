@@ -26,7 +26,7 @@ class Chart(object):
     def __init__(self):
         pass
         
-    def embedded (self):
+    def embedded(self):
         script, div = components(self.plot)
         return script, div
 

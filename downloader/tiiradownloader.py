@@ -35,6 +35,7 @@ LOPPUPVM = ''
 KUNTA = ''
 PAIKKA = ''
 RAJOITUS = '5' #'0' kaikki, '5' salaamattomat
+ALUE = '23' # Lapin lintutieteellinen yhdistys
 
 #ALKUVUOSI = sys.argv[1]
 #LOPPUVUOSI = sys.argv[2]
@@ -90,13 +91,14 @@ def new_session(credentials):
 #         print ("alkupvm ", TALLENNUS_ALKUPVM, "loppupvm ", TALLENNUS_LOPPUPVM)
 
  
-def download_period(days, session):
+def download_period(days, session, alue='23'):
 
     now = datetime.now()
     delta = timedelta(days=days)
     start = now - delta
     TALLENNUS_ALKUPVM = f'{start:%d.%m.%Y}'
     TALLENNUS_LOPPUPVM = ''
+    ALUE = f'{alue}'
     
     print(datetime.now(),"\talkupvm ", TALLENNUS_ALKUPVM, "loppupvm ", TALLENNUS_LOPPUPVM)
     
@@ -105,12 +107,13 @@ def download_period(days, session):
     ALKU,
     'kunta=',KUNTA,
     '&paikka=',PAIKKA,
-    '&paivamaara=3', # 3=tallennuspvam, 1=havaintopvm?
+    '&paivamaara=3', # 3=tallennuspvm, 1=havaintopvm?
     '&paivamaara_a=',ALKUPVM,
     '&paivamaara_l=',LOPPUPVM,
     '&paivamaara_tal_a=',TALLENNUS_ALKUPVM,
     '&paivamaara_tal_l=',TALLENNUS_LOPPUPVM,
-    '&alue=23&qorde=&valinta=&omatilm=&omathav=&yhdistyslataus=1&yksmaara=&fi_rari=&fi_aika=&fi_maara=&al_rari=&al_aika=&al_maara=&piilota_poistetut=on&piilota_koontialkuper=on',
+    '&alue=',ALUE,
+    '&qorde=&valinta=&omatilm=&omathav=&yhdistyslataus=1&yksmaara=&fi_rari=&fi_aika=&fi_maara=&al_rari=&al_aika=&al_maara=&piilota_poistetut=on&piilota_koontialkuper=on',
     '&rajoitus=',RAJOITUS,
     '&atlaskrakki=&lyhenne=nimi&taytto=kylla&summarivi=ei']
     url = ''.join(url_parts)
@@ -132,7 +135,7 @@ def download_period(days, session):
 
     return csv.text
 
-def main(days_past, csv_filename='tiira.csv'):
+def main(days_past, csv_filename, alue):
 
     credentials = {
             'TUNNUS': '',
@@ -148,7 +151,7 @@ def main(days_past, csv_filename='tiira.csv'):
     for chance in range(3):
         try:    
             print(datetime.now(), f'\tLadataan csv-tiedosto {days_past} päivän ajalta')
-            csv = download_period(days_past, session)
+            csv = download_period(days_past, session, alue)
             if len(csv.split('\r\n', 1)[0]) < 380 or len(csv.split('\r\n', 1)[0]) > 410:
                 # LRCF newlines 
                 # normal tiira csv-file first line length for 1st line is 391, depends on linefeed characters. allows minor csv-format change
@@ -176,6 +179,7 @@ if __name__ == "__main__":
     
     parser = argparse.ArgumentParser(description="Kirjaantuu Tiiraan ja lataa csv-tiedoston tallennusajan mukaan")
     parser.add_argument("-d", "--days", type=int, help="kuinka monta päivää taaksepäin nykyhetkestä  (oletus 7)", default=7)
-    parser.add_argument("-f", "--filename", type=str, help="ladattavan tiedoston nimi (default tiira.csv)", default="tiira.csv")
+    parser.add_argument("-f", "--filename", type=str, help="ladattavan tiedoston nimi (oletus tiira.csv)", default="tiira.csv")
+    parser.add_argument("-a", "--area", type=int, help="Lintutieteellisen yhdistyksen aluekoodi (oletus 23)", default="23")
     args = parser.parse_args()
-    main(days_past=args.days, csv_filename=args.filename)
+    main(days_past=args.days, csv_filename=args.filename, alue=args.area)
