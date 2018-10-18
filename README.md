@@ -27,8 +27,8 @@ Input correct login credentials
 
 #### Usage example
 
-`python3 downloader/tiira_downloader.py -d 30 -f tiira.csv`
-`python3 tiirareport.py -f tiira.csv`
+```python3 downloader/tiira_downloader.py -d 30 -f tiira.csv
+python3 tiirareport.py -f tiira.csv```
 
 #### License
 
