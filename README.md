@@ -27,11 +27,13 @@ Input correct login credentials
 
 #### Usage example
 
-```python3 downloader/tiira_downloader.py -d 30 -f tiira.csv
-python3 tiirareport.py -f tiira.csv```
+```
+python3 downloader/tiira_downloader.py -d 30 -f tiira.csv
+python3 tiirareport.py -f tiira.csv
+```
 
 #### License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
 
 
