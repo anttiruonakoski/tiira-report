@@ -1,16 +1,16 @@
 ## Tiira-report
 
-Python tools for [Tiira](https://www.tiira.fi) bird observation data reporting and visualization. Illustrative report is published at (https://www.lly.fi/havainnot/tiira-raportti) 
+Python tools for [Tiira](https://www.tiira.fi) bird observation data reporting and visualization. Demonstrative report is published at https://www.lly.fi/havainnot/tiira-raportti 
   
 Components:
 
-- tiiradownloader: download and save data as a csv-file
+- tiiradownloader: download and save data as a csv-file *currently supports only regional society administrator downloads* 
 
 - tiirareport: generate a web page
 	+ tiiradataframe: functions for Tiira-specific pandas and geopandas dataframes 
-	+ tiiraplot: plot diagrams
-	+ tiiramap: plot maps
-	+ report template: Jinja2 template for report HTML
+	+ tiiraplot: plot potentially interactive diagrams *Bokeh, bokeh.js*
+	+ tiiramap: plot static maps *matplotlib, rasterio*
+	+ report template: template for report HTML *Jinja2*
 
 #### Installation & requirements
 
