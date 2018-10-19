@@ -55,8 +55,8 @@ def main(df):
             for key, value in columns.items():
                 plotkey = str(days) + key
                 x = df.pipe(filter_submit_period, days=days) \
-                                            .pipe(groupbylaji) \
-                                            .pipe(sort, sortkey=value[0]).head(15)
+                    .pipe(groupbylaji) \
+                    .pipe(sort, sortkey=value[0]).head(15)
                 # drop all columns but laji and aggregate
                 plotdata[plotkey] = x[['laji', value[0]]]
                 title = value[1] + str(days) + ' päivän aikana'
@@ -65,8 +65,8 @@ def main(df):
                 figures.append(dict(script=s, div=d))
 
             plotdata[str(days) + 'tallentajat'] = df.pipe(filter_submit_period, days=days) \
-                                    .pipe(groupbysubmitter) \
-                                    .pipe(sort, sortkey='havaintoriviä').head(5)
+                .pipe(groupbysubmitter) \
+                .pipe(sort, sortkey='havaintoriviä').head(5)
 
             title = 'Ahkerimmat tallentajat ' + str(days) + ' päivän aikana'
             d = pd.DataFrame.to_html(plotdata[str(days) + 'tallentajat'], index=False, classes='submittertable')
@@ -81,7 +81,7 @@ def main(df):
         for days in [7, 30]:
             mapdata = gdf.pipe(filter_submit_period, days=days)
             map_filename = f'lly_{days}_days.png'
-            map = Map().plot(mapdata, 'reports/maps/'+map_filename)
+            Map.plot(mapdata, 'reports/maps/'+map_filename)
         print(datetime.now(), 'kartat valmiit')
 
         try:
@@ -94,9 +94,9 @@ def main(df):
 
 if __name__ == "__main__":
 
-    parser = argparse.ArgumentParser(description="Generate a datetime limited pandas.py dataframe")
-    # parser.add_argument("-d", "--days", type=int, help="show days past (default 7)", default=7)
-    parser.add_argument("-f", "--filename", type=str, help="downloaded file name (default tiira.csv)", default="tiira.csv")
+    parser = argparse.ArgumentParser(description="Tee raportti Tiira-data csv:stä")
+    # parser.add_argument("-d", "--days", type=int, help="show days past (oletus 7)", default=7)
+    parser.add_argument("-f", "--filename", type=str, help="csv-tiedoston nimi (oletus downloader/tiira.csv)", default="downloader/tiira.csv")
     args = parser.parse_args()
     # main(days_past=args.days, csv_filename=args.filename)
     try:
@@ -104,5 +104,5 @@ if __name__ == "__main__":
     except IOError as e:
         print(f'virhe tiedoston {args.filename} avaamisessa', e)
         sys.exit(1)
-
+    main(df)
 # <3 pandas & bokeh & jinja2

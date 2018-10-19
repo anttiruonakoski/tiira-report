@@ -23,11 +23,8 @@ class Map(object):
     def __init__(self):
         pass
 
-    def plot(self, data, mapfilename):
-
-        self.data = data
-        gdf = self.data
-        self.mapfilename = mapfilename
+    @staticmethod
+    def plot(gdf, mapfilename):
 
         fig, ax = plt.subplots(figsize=(8, 8), dpi=72.0)
 
@@ -43,7 +40,7 @@ class Map(object):
         gdf.plot(marker='+', color='yellowgreen', markersize=12, alpha=0.4, ax=ax)
         try:
             # dpi different in file and display backends, use display dpi. also some unclear variation of raster img ax size compared with jupyter notebook, which produces 9 px shorter image.
-            plt.savefig(self.mapfilename, bbox_inches='tight', pad_inches=0, dpi=72.0)
+            plt.savefig(mapfilename, bbox_inches='tight', pad_inches=0, dpi=72.0)
         except IOError as e:
             print(e)
         return
