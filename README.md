@@ -2,7 +2,7 @@
 
 Python tools for [Tiira](https://www.tiira.fi) bird observation data reporting and visualization. Demonstrative report is published at https://www.lly.fi/havainnot/tiira-raportti 
   
-Components:
+Components and main libraries used:
 
 - tiiradownloader: download and save data as a csv-file  
 	*currently supports only regional society administrator downloads* 
