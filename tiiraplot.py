@@ -48,29 +48,28 @@ class SumChart(Chart):
 
         data = self.data
         title = self.title
-
         X = list(data)[1]  # X-axle data
         Y = list(data)[0]  # Y-axle data
 
         # print(data)
         source = ColumnDataSource(data)
-
         high = data[data[X] > data[X].quantile(.9)]
         low = data[data[X] <= data[X].quantile(.9)]
         max = data[X].max()
         x_offset = -len(str(int(max)))*7.5
-
         sourcehigh = ColumnDataSource(high)
         sourcelow = ColumnDataSource(low)
-
         mapper = linear_cmap(field_name=X, palette=cc.blues, low=0, high=max*0.9)
-
         lajit = source.data['laji'].tolist()[::-1]
 
         p = figure(plot_width=640, plot_height=400, x_axis_type='linear', title=title, y_range=lajit)
 
-        labels = LabelSet(x=X, y='laji', text=X, level='glyph', x_offset=4, source=sourcelow, text_font_size='8pt', text_baseline='middle')
-        labelshigh = LabelSet(x=X, y='laji', text=X, level='glyph', x_offset=x_offset, source=sourcehigh, text_font_size='8pt', text_baseline='middle', text_color='#FFFFFF')
+        labels = LabelSet(
+            x=X, y='laji', text=X, level='glyph', x_offset=4, source=sourcelow,
+            text_font_size='8pt', text_baseline='middle')
+        labelshigh = LabelSet(
+            x=X, y='laji', text=X, level='glyph', x_offset=x_offset, source=sourcehigh,
+            text_font_size='8pt', text_baseline='middle', text_color='#FFFFFF')
 
         # visual
         p.x_range.start = 0

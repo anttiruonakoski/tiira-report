@@ -96,7 +96,10 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description="Tee raportti Tiira-data csv:stä")
     # parser.add_argument("-d", "--days", type=int, help="show days past (oletus 7)", default=7)
-    parser.add_argument("-f", "--filename", type=str, help="csv-tiedoston nimi (oletus downloader/tiira.csv)", default="downloader/tiira.csv")
+    parser.add_argument(
+        "-f", "--filename", type=str, help="csv-tiedoston nimi (oletus downloader/tiira.csv)",
+        default="downloader/tiira.csv"
+        )
     args = parser.parse_args()
     # main(days_past=args.days, csv_filename=args.filename)
     try:

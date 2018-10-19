@@ -122,7 +122,8 @@ def download_period(days, session, alue='23'):
         '&paivamaara_tal_a=', TALLENNUS_ALKUPVM,
         '&paivamaara_tal_l=', TALLENNUS_LOPPUPVM,
         '&alue=', ALUE,
-        '&qorde=&valinta=&omatilm=&omathav=&yhdistyslataus=1&yksmaara=&fi_rari=&fi_aika=&fi_maara=&al_rari=&al_aika=&al_maara=&piilota_poistetut=on&piilota_koontialkuper=on',
+        '&qorde=&valinta=&omatilm=&omathav=&yhdistyslataus=1&yksmaara=&fi_rari=&fi_aika=&fi_maara=&al_rari=&\
+        al_aika=&al_maara=&piilota_poistetut=on&piilota_koontialkuper=on',
         '&rajoitus=', RAJOITUS,
         '&atlaskrakki=&lyhenne=nimi&taytto=kylla&summarivi=ei']
     url = ''.join(url_parts)
@@ -163,8 +164,13 @@ def main(days_past, csv_filename, alue):
             csv = download_period(days_past, session, alue)
             if len(csv.split('\r\n', 1)[0]) < 380 or len(csv.split('\r\n', 1)[0]) > 410:
                 # LRCF newlines
-                # normal tiira csv-file first line length for 1st line is 391, depends on linefeed characters. allows minor csv-format change
-                print(datetime.now(), '\tViallinen csv-tiedosto tai vanhentunut istunto. Kirjaudutaan ja yritetään uudelleen. kerta: ', chance)
+                # normal tiira csv-file first line length for 1st line is 391, depends on linefeed characters.
+                # allows minor csv-format change
+                print(
+                    datetime.now(),
+                    '\tViallinen csv-tiedosto tai vanhentunut istunto. Kirjaudutaan ja yritetään uudelleen. kerta: ',
+                    chance
+                    )
                 time.sleep(wait)
                 session = new_session(credentials)
             else:
@@ -175,7 +181,8 @@ def main(days_past, csv_filename, alue):
                     # converts newlines
                     # converts to utf-8 because it's native text write encoding in Python.
                     # html entities such as emojis should be unescaped
-                    # tbd check malformed rows (extra '#' inputted in tiira text field). doesn't matter with pandas csv impoter, but effects SQL copy commands
+                    # tbd check malformed rows (extra '#' inputted in tiira text field).
+                    # doesn't matter with pandas csv impoter, but effects SQL copy commands
                     print(datetime.now(), '\tcsv-tiedosto tallennettu onnistuneesti')
                 break
         except Exception as e:
@@ -187,8 +194,17 @@ def main(days_past, csv_filename, alue):
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description="Kirjaantuu Tiiraan ja lataa csv-tiedoston tallennusajan mukaan")
-    parser.add_argument("-d", "--days", type=int, help="kuinka monta päivää taaksepäin nykyhetkestä  (oletus 7)", default=7)
-    parser.add_argument("-f", "--filename", type=str, help="ladattavan tiedoston nimi (oletus tiira.csv)", default="tiira.csv")
-    parser.add_argument("-a", "--area", type=int, help="Lintutieteellisen yhdistyksen aluekoodi (oletus 23)", default="23")
+    parser.add_argument(
+        "-d", "--days", type=int, help="kuinka monta päivää taaksepäin nykyhetkestä  (oletus 7)",
+        default=7
+        )
+    parser.add_argument(
+        "-f", "--filename", type=str, help="ladattavan tiedoston nimi (oletus tiira.csv)",
+        default="tiira.csv"
+        )
+    parser.add_argument(
+        "-a", "--area", type=int, help="Lintutieteellisen yhdistyksen aluekoodi (oletus 23)",
+        default="23"
+        )
     args = parser.parse_args()
     main(days_past=args.days, csv_filename=args.filename, alue=args.area)

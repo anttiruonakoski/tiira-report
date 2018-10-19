@@ -35,11 +35,14 @@ class Map(object):
         ax.axes.get_xaxis().set_visible(False)
         ax.axes.get_yaxis().set_visible(False)
 
-        show(array, interpolation='sinc', transform=src.transform, ax=ax)
+        show(array, interpolation='sinc', transform=src.transform, ax=ax)  # basemap
+        gdf.plot(marker='+', color='yellowgreen', markersize=12, alpha=0.4, ax=ax)  # markers
 
-        gdf.plot(marker='+', color='yellowgreen', markersize=12, alpha=0.4, ax=ax)
         try:
-            # dpi different in file and display backends, use display dpi. also some unclear variation of raster img ax size compared with jupyter notebook, which produces 9 px shorter image.
+            # dpi different in file (default 100 dpi) and display backends, use display dpi
+            # to produce end result similar to jupyter notebook.
+            # note some unclear variation of show(raster) size compared with jupyter notebook,
+            # which produces 9 px shorter image with exactly similar backend, fig definition and savefig method call.
             plt.savefig(mapfilename, bbox_inches='tight', pad_inches=0, dpi=72.0)
         except IOError as e:
             print(e)

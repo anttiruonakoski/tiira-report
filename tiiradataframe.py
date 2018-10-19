@@ -31,8 +31,11 @@ def read_csv(csv_file='downloader/tiira.csv'):
 
     parse_dates = ['Tallennusaika']
     # dtypes = {'Määrä': np.int32} # ei voi käyttää kts alta
-    df = pd.read_csv(csv_file, sep='#', parse_dates=parse_dates, keep_default_na=True, converters={'Pvm1': finnish_date_converter, 'Pvm2': finnish_date_converter})
-    # tiiran muodostamassa csv-tiedostossa 0-havaintojen yksilömäärä kirjoitettu tyhjänä 'Määrä' sarakkeena. täytetään nollat.
+    df = pd.read_csv(
+        csv_file, sep='#', parse_dates=parse_dates, keep_default_na=True,
+        converters={'Pvm1': finnish_date_converter, 'Pvm2': finnish_date_converter})
+    # tiiran muodostamassa csv-tiedostossa 0-havaintojen yksilömäärä kirjoitettu tyhjänä 'Määrä' sarakkeena.
+    # täytetään nollat.
     df['Määrä'] = df['Määrä'].fillna(0)
     return df
 
@@ -79,8 +82,10 @@ def addgeometries(df, observer_location=True):
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description="Generate a datetime limited pandas.py dataframe")
-    parser.add_argument("-d", "--days", type=int, help="show days past (default 7)", default=7)
-    parser.add_argument("-f", "--filename", type=str, help="downloaded file name (default tiira.csv)", default="tiira.csv")
+    parser.add_argument(
+        "-d", "--days", type=int, help="show days past (default 7)", default=7)
+    parser.add_argument(
+        "-f", "--filename", type=str, help="downloaded file name (default tiira.csv)",default="tiira.csv")
     args = parser.parse_args()
     # main(days_past=args.days, csv_filename=args.filename)
     try:
