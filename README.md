@@ -1,6 +1,6 @@
 ## Tiira-report
 
-Python tools for [Tiira](https://www.tiira.fi) bird observation data reporting and visualization. Demonstrative report is published at https://www.lly.fi/havainnot/tiira-raportti 
+Python tools for [Tiira](https://www.tiira.fi) bird observation data reporting and visualisation. The demonstration is published at https://www.lly.fi/havainnot/tiira-raportti 
   
 Components and main libraries used:
 
@@ -13,7 +13,7 @@ Components and main libraries used:
 	+ tiiramap: plot static maps - *matplotlib, rasterio*
 	+ templates: template for report HTML - *Jinja2*
 
-- Jupyter notebook examples how-to manipulate, analyze and utilize data. To be done.
+- Jupyter notebook examples about manipulating, analysing and utilising data. To be done.
 
 - static: css, basemaps, etc.
 
@@ -30,7 +30,7 @@ To install requirements
 
 #### After Installation
 
-`cp downloader/credentials.example credentials.txt`  
+`cp downloader/credentials.example downloader/credentials.txt`  
 Input correct login credentials
 
 
