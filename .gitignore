@@ -18,3 +18,4 @@ reports/*.gz
 reports/maps/*
 scrollcolors.ipynb
 rolling.ipynb
+*.ipynb

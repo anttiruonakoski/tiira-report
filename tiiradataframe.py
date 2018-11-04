@@ -26,8 +26,21 @@ def read_csv(csv_file='downloader/tiira.csv'):
 
     def finnish_date_converter(x):
         """convert Finnish date format dd.mm.yyyy to ISO-8601"""
+        # Tiira csv date can include zero day or month value
         if x:
-            return pd.to_datetime(x, format='%d.%m.%Y')
+            dateparts = x.split('.')
+            date, format = [], []
+            try:
+                for num, part in enumerate(['%d', '%m']):
+                    if int(dateparts[num]):
+                        format.append(part)
+                        date.append(dateparts[num])
+            except Exception as e:
+                print(e)
+            format = '.'.join(format) + '.%Y'
+            date = '.'.join(date) + '.' + dateparts[2]
+            d = pd.to_datetime(date, format=format)
+            return d
 
     parse_dates = ['Tallennusaika']
     # dtypes = {'Määrä': np.int32} # ei voi käyttää kts alta
@@ -85,7 +98,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "-d", "--days", type=int, help="show days past (default 7)", default=7)
     parser.add_argument(
-        "-f", "--filename", type=str, help="downloaded file name (default tiira.csv)",default="tiira.csv")
+        "-f", "--filename", type=str, help="downloaded file name (default tiira.csv)", default="tiira.csv")
     args = parser.parse_args()
     # main(days_past=args.days, csv_filename=args.filename)
     try:
