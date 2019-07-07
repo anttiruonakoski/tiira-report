@@ -25,7 +25,7 @@ def read_csv(csv_file='downloader/tiira.csv'):
     def finnish_date_converter(x):
         """convert Finnish date format dd.mm.yyyy to ISO-8601"""
         if x:  
-            return pd.to_datetime(x, format='%d.%m.%Y')
+            return pd.to_datetime(x, format='%d.%m.%Y', errors='coerce' )
 
     parse_dates = ['Tallennusaika']
     #dtypes = {'Määrä': np.int32} # ei voi käyttää kts alta
