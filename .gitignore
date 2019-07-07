@@ -15,3 +15,6 @@ __pycache__/*
 *.log
 reports/*.gz
 !templates/*
+reports/maps/*
+scrollcolors.ipynb
+rolling.ipynb
