@@ -12,11 +12,11 @@ __email__ = "aruonakoski@gmail.com"
 __status__ = "Development"
 
 import matplotlib
+# non X display backend
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from rasterio.plot import show
 import rasterio
-
-matplotlib.use('Agg')  # non X display backend
 
 
 class Map(object):
