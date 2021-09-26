@@ -41,63 +41,63 @@ class Report(object):
 
 
 def main(df):
-        plotdata = {}
-        figures, tables = [], []
+    plotdata = {}
+    figures, tables = [], []
 
-        # REPORT PLOTTING
-        # sort keys yksilosumma, havaintorivisumma
+    # REPORT PLOTTING
+    # sort keys yksilosumma, havaintorivisumma
 
-        columns = {
-            'havainnot': ['havaintorivisumma', 'Tiiraan ilmotetut havaintorivit '],
-            'yksilot':  ['yksilosumma', 'Tiiraan ilmotetut yksilöt ']
-        }
-        for days in [7, 30]:
-            for key, value in columns.items():
-                plotkey = str(days) + key
-                x = df.pipe(filter_submit_period, days=days) \
-                    .pipe(groupbylaji) \
-                    .pipe(sort, sortkey=value[0]).head(15)
-                # drop all columns but laji and aggregate
-                plotdata[plotkey] = x[['laji', value[0]]]
-                title = value[1] + str(days) + ' päivän aikana'
+    columns = {
+        'havainnot': ['havaintorivisumma', 'Tiiraan ilmotetut havaintorivit '],
+        'yksilot':  ['yksilosumma', 'Tiiraan ilmotetut yksilöt ']
+    }
+    for days in [7, 30]:
+        for key, value in columns.items():
+            plotkey = str(days) + key
+            x = df.pipe(filter_submit_period, days=days) \
+                .pipe(groupbylaji) \
+                .pipe(sort, sortkey=value[0]).head(15)
+            # drop all columns but laji and aggregate
+            plotdata[plotkey] = x[['laji', value[0]]]
+            title = value[1] + str(days) + ' päivän aikana'
 
-                s, d = (SumChart(data = plotdata[plotkey], title=title).embedded())
-                figures.append(dict(script=s, div=d))
+            s, d = (SumChart(data=plotdata[plotkey], title=title).embedded())
+            figures.append(dict(script=s, div=d))
 
-            plotdata[str(days) + 'tallentajat'] = df.pipe(filter_submit_period, days=days) \
-                .pipe(groupbysubmitter) \
-                .pipe(sort, sortkey='havaintoriviä').head(5)
+        plotdata[str(days) + 'tallentajat'] = df.pipe(filter_submit_period, days=days) \
+            .pipe(groupbysubmitter) \
+            .pipe(sort, sortkey='havaintoriviä').head(5)
 
-            title = 'Ahkerimmat tallentajat ' + str(days) + ' päivän aikana'
-            d = pd.DataFrame.to_html(plotdata[str(days) + 'tallentajat'], index=False, classes='submittertable')
-            # s, d = (TableChart(data = plotdata[str(days) + 'tallentajat'], title = title).embedded())
-            tables.append(dict(table=d, title=title))
+        title = 'Ahkerimmat tallentajat ' + str(days) + ' päivän aikana'
+        d = pd.DataFrame.to_html(plotdata[str(days) + 'tallentajat'], index=False, classes='submittertable')
+        # s, d = (TableChart(data = plotdata[str(days) + 'tallentajat'], title = title).embedded())
+        tables.append(dict(table=d, title=title))
 
-        report = Report(figures, tables, datetime.now().strftime("%d.%m.%Y klo %H:%M")).compose()
+    report = Report(figures, tables, datetime.now().strftime("%d.%m.%Y klo %H:%M")).compose()
 
-        # MAPS PLOTTING
-        gdf = df.pipe(addgeometries, observer_location=True)
-        # Tiira allows placing observation point well outside of observation gathering area boundaries, so we need to filter erroneous points before plotting the map.
-        gdf = filter_points_not_within_boundaries(gdf)
+    # MAPS PLOTTING
+    gdf = df.pipe(addgeometries, observer_location=True)
+    # Tiira allows placing observation point well outside of observation gathering area boundaries, so we need to filter erroneous points before plotting the map.
+    gdf = gdf.pipe(filter_points_not_within_boundaries)
 
-        for days in [7, 30]:
-            mapdata = gdf.pipe(filter_submit_period, days=days)
-            map_filename = f'lly_{days}_days.png'
-            Map.plot(mapdata, 'reports/maps/'+map_filename)
-        print(datetime.now(), 'kartat valmiit')
+    for days in [7, 30]:
+        mapdata = gdf.pipe(filter_submit_period, days=days)
+        map_filename = f'lly_{days}_days.png'
+        Map.plot(mapdata, 'reports/maps/'+map_filename)
+    print(datetime.now(), 'kartat valmiit')
 
-        try:
-            with open('reports/report.html', 'w') as r:
-                r.write(report)
-            print(datetime.now(), 'raportti valmis')
-        except Exception as e:
-            sys.exit(1)
+    try:
+        with open('reports/report.html', 'w') as r:
+            r.write(report)
+        print(datetime.now(), 'raportti valmis')
+    except Exception as e:
+        sys.exit(1)
 
 
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description="Tee raportti Tiira-data csv:stä")
-    # parser.add_argument("-d", "--days", type=int, help="show days past (oletus 7)", default=7)
+    parser.add_argument("-d", "--days", type=int, help="show days past (oletus 7)", default=7)
     parser.add_argument(
         "-f", "--filename", type=str, help="csv-tiedoston nimi (oletus downloader/tiira.csv)",
         default="downloader/tiira.csv",
