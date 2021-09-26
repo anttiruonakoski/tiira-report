@@ -33,7 +33,7 @@ def read_csv(csv_file='downloader/tiira.csv'):
     # dtypes = {'Määrä': np.int32} # ei voi käyttää kts alta
     df = pd.read_csv(
         csv_file, sep='#', parse_dates=parse_dates, keep_default_na=True,
-        converters={'Pvm1': finnish_date_converter, 'Pvm2': finnish_date_converter})
+        converters={'Pvm1': finnish_date_converter, 'Pvm2': finnish_date_converter}, low_memory=False)
     # tiiran muodostamassa csv-tiedostossa 0-havaintojen yksilömäärä kirjoitettu tyhjänä 'Määrä' sarakkeena.
     # täytetään nollat.
     df['Määrä'] = df['Määrä'].fillna(0)
@@ -41,7 +41,7 @@ def read_csv(csv_file='downloader/tiira.csv'):
 
 
 def begin_time(days):
-    s = pd.Timedelta(-days, unit='d') + pd.datetime.now()
+    s = pd.Timedelta(-days, unit='d') + datetime.now()
     return s
 
 
@@ -80,12 +80,13 @@ def addgeometries(df, observer_location=True):
 
 
 def filter_points_not_within_boundaries(tiira_gdf: gpd.GeoDataFrame, mask_file='data/LLY-toimialue.gpkg',
-                                        mask_layer='LLY-toimialue') -> pd.DataFrame:
+                                        mask_layer='LLY-toimialue') -> gpd.GeoDataFrame:
     try:
-        mask_gdf = gpd.read_file(mask_file, mask_layer)
-    except Exception as e:
+        mask_gdf = gpd.read_file(mask_file, layer=mask_layer)
+        tiira_gdf = gpd.clip(tiira_gdf, mask_gdf)
+    except IOError as e:
         print(f'virhe tiedoston {mask_file} avaamisessa', e)
-    tiira_gdf = gpd.clip(tiira_gdf, mask_gdf)
+        sys.exit(1)
     return tiira_gdf
 
 
