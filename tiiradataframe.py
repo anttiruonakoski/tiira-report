@@ -17,7 +17,7 @@ import numpy as np
 import pandas as pd
 import argparse
 import sys
-import geopandas
+import geopandas as gpd
 from shapely.geometry import Point
 # Va,ka blu-users. Connect ja send:
 
@@ -26,8 +26,8 @@ def read_csv(csv_file='downloader/tiira.csv'):
 
     def finnish_date_converter(x):
         """convert Finnish date format dd.mm.yyyy to ISO-8601"""
-        if x:  
-            return pd.to_datetime(x, format='%d.%m.%Y', errors='coerce' )
+        if x:
+            return pd.to_datetime(x, format='%d.%m.%Y', errors='coerce')
 
     parse_dates = ['Tallennusaika']
     # dtypes = {'Määrä': np.int32} # ei voi käyttää kts alta
@@ -70,13 +70,23 @@ def sort(df, sortkey):
 
 
 def addgeometries(df, observer_location=True):
-
     # bird_location not implemented
     if observer_location:
         df['Coordinates'] = list(zip(df['X-koord'], df['Y-koord']))
         df['Coordinates'] = df['Coordinates'].apply(Point)
-        gdf = geopandas.GeoDataFrame(df, geometry='Coordinates')
+        gdf = gpd.GeoDataFrame(df, geometry='Coordinates')
+        gdf.set_crs(epsg=3067, inplace=True)
     return gdf
+
+
+def filter_points_not_within_boundaries(tiira_gdf: gpd.GeoDataFrame, mask_file='data/LLY-toimialue.gpkg',
+                                        mask_layer='LLY-toimialue') -> pd.DataFrame:
+    try:
+        mask_gdf = gpd.read_file(mask_file, mask_layer)
+    except Exception as e:
+        print(f'virhe tiedoston {mask_file} avaamisessa', e)
+    tiira_gdf = gpd.clip(tiira_gdf, mask_gdf)
+    return tiira_gdf
 
 
 if __name__ == "__main__":
@@ -85,7 +95,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "-d", "--days", type=int, help="show days past (default 7)", default=7)
     parser.add_argument(
-        "-f", "--filename", type=str, help="downloaded file name (default tiira.csv)",default="tiira.csv")
+        "-f", "--filename", type=str, help="downloaded file name (default tiira.csv)", default="tiira.csv")
     args = parser.parse_args()
     # main(days_past=args.days, csv_filename=args.filename)
     try:

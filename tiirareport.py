@@ -3,7 +3,7 @@
 """tiirareport.py: Generate Jinja2 template based HTML-document from Bokeh sub-components."""
 
 __author__ = "Antti Ruonakoski"
-__copyright__ = "Copyright 2018"
+__copyright__ = "Copyright 2018, 2021"
 __credits__ = ["Antti Ruonakoski"]
 __license__ = "MIT"
 __version__ = ""
@@ -77,6 +77,8 @@ def main(df):
 
         # MAPS PLOTTING
         gdf = df.pipe(addgeometries, observer_location=True)
+        # Tiira allows placing observation point well outside of observation gathering area boundaries, so we need to filter erroneous points before plotting the map.
+        gdf = filter_points_not_within_boundaries(gdf)
 
         for days in [7, 30]:
             mapdata = gdf.pipe(filter_submit_period, days=days)
@@ -99,8 +101,8 @@ if __name__ == "__main__":
     parser.add_argument(
         "-f", "--filename", type=str, help="csv-tiedoston nimi (oletus downloader/tiira.csv)",
         default="downloader/tiira.csv",
-        "-lf", "--longdatafile", type=str, help="pitkänajan vertailutiedon csv-tiedoston nimi (oletus downloader/tiiralong.csv)",
-        default="downloader/tiiralong.csv",
+#        "-lf", "--longdatafile", type=str, help="pitkänajan vertailutiedon csv-tiedoston nimi (oletus downloader/tiiralong.csv)",
+#        default="downloader/tiiralong.csv",
         )
     args = parser.parse_args()
     # main(days_past=args.days, csv_filename=args.filename)

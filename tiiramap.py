@@ -3,7 +3,7 @@
 """tiiramap.py: plot map from geopandas dataframe."""
 
 __author__ = "Antti Ruonakoski"
-__copyright__ = "Copyright 2018"
+__copyright__ = "Copyright 2018, 2021"
 __credits__ = ["Antti Ruonakoski"]
 __license__ = "MIT"
 __version__ = ""
@@ -12,10 +12,11 @@ __email__ = "aruonakoski@gmail.com"
 __status__ = "Development"
 
 import matplotlib
-matplotlib.use('Agg')  # non X display backend
 import matplotlib.pyplot as plt
 from rasterio.plot import show
 import rasterio
+
+matplotlib.use('Agg')  # non X display backend
 
 
 class Map(object):
