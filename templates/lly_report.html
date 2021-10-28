@@ -14,8 +14,8 @@
     <link rel="stylesheet" href="../static/css/lly-tiira-report.css" type="text/css"/>
 
     <link href="https://cdn.pydata.org/bokeh/release/bokeh-0.13.0.min.css" rel="stylesheet" type="text/css">
-    <script src="https://cdn.pydata.org/bokeh/release/bokeh-0.13.0.min.js"></script>
-    {% for figure in data.figures %}
+    <script src="https://cdn.bokeh.org/bokeh/release/bokeh-0.13.0.min.js" crossorigin="anonymous"></script>
+    
         {{ figure.script | safe }}
     {% endfor %}    
     <title>Tiira-raportti</title>
