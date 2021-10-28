@@ -16,6 +16,7 @@
     <link href="https://cdn.pydata.org/bokeh/release/bokeh-0.13.0.min.css" rel="stylesheet" type="text/css">
     <script src="https://cdn.bokeh.org/bokeh/release/bokeh-0.13.0.min.js" crossorigin="anonymous"></script>
     
+    {% for figure in data.figures %}
         {{ figure.script | safe }}
     {% endfor %}    
     <title>Tiira-raportti</title>
