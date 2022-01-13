@@ -78,7 +78,7 @@ param==1.11.1
     # via
     #   colorcet
     #   pyct
-pillow==8.3.2
+pillow==9.0.0
     # via
     #   bokeh
     #   matplotlib
