@@ -60,7 +60,6 @@ def main(df):
             # drop all columns but laji and aggregate
             plotdata[plotkey] = x[['laji', value[0]]]
             title = value[1] + str(days) + ' päivän aikana'
-
             s, d = (SumChart(data=plotdata[plotkey], title=title).embedded())
             figures.append(dict(script=s, div=d))
 

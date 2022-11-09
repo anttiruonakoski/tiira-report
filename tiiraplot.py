@@ -20,7 +20,6 @@ from bokeh.embed import file_html, components
 from bokeh.transform import linear_cmap
 import colorcet as cc
 
-
 class Chart(object):
 
     def __init__(self):
@@ -47,6 +46,7 @@ class SumChart(Chart):
     def make(self):
 
         data = self.data
+
         title = self.title
         X = list(data)[1]  # X-axle data
         Y = list(data)[0]  # Y-axle data
@@ -62,7 +62,7 @@ class SumChart(Chart):
         mapper = linear_cmap(field_name=X, palette=cc.blues, low=0, high=max*0.9)
         lajit = source.data['laji'].tolist()[::-1]
 
-        p = figure(plot_width=640, plot_height=400, x_axis_type='linear', title=title, y_range=lajit)
+        p = figure(width=640, height=400, x_axis_type='linear', title=title, y_range=lajit)
 
         labels = LabelSet(
             x=X, y='laji', text=X, level='glyph', x_offset=4, source=sourcelow,
