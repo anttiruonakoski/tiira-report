@@ -13,8 +13,8 @@
     
     <link rel="stylesheet" href="../static/css/lly-tiira-report.css" type="text/css"/>
 
-    <link href="https://cdn.pydata.org/bokeh/release/bokeh-0.13.0.min.css" rel="stylesheet" type="text/css">
-    <script src="https://cdn.bokeh.org/bokeh/release/bokeh-0.13.0.min.js" crossorigin="anonymous"></script>
+    <!-- <link href="https://cdn.pydata.org/bokeh/release/bokeh-0.13.0.min.css" rel="stylesheet" type="text/css"> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bokeh/3.0.1/bokeh.min.js" crossorigin="anonymous"></script>
     
     {% for figure in data.figures %}
         {{ figure.script | safe }}
