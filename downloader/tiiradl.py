@@ -117,15 +117,15 @@ class Downloader:
             "&paivamaara_l=",
             self.options["LOPPUPVM"],
             "&paivamaara_tal_a=",
-            self.options['TALLENNUS_ALKUPVM'],
+            self.options["TALLENNUS_ALKUPVM"],
             "&paivamaara_tal_l=",
-            self.options['TALLENNUS_LOPPUPVM'],
+            self.options["TALLENNUS_LOPPUPVM"],
             "&alue=",
-            self.options['ALUE'],
+            self.options["ALUE"],
             "&qorde=&valinta=&omatilm=&omathav=&yhdistyslataus=1&yksmaara=&fi_rari=&fi_aika=&fi_maara=&al_rari=&\
             al_aika=&al_maara=&piilota_poistetut=on",
             "&piilota_koontialkuper=",
-            self.options['PIILOTA_KOONTIALKUPER'],
+            self.options["PIILOTA_KOONTIALKUPER"],
             "&rajoitus=",
             self.options["RAJOITUS"],
             "&atlaskrakki=&lyhenne=nimi&taytto=kylla&summarivi=ei",
@@ -136,7 +136,7 @@ class Downloader:
 
     def download(self) -> str:
         try:
-            csv_raw = self.session.get(self.url)
+            csv_raw = self.session.get(self.url, timeout=600)
             csv_raw.raise_for_status()
         except Exception as e:
             print("Virhe csv-tiedoston osoitteen hakemisessa. \n", e)
@@ -146,11 +146,11 @@ class Downloader:
         downloadable_file = re.findall(
             filepattern, csv_raw.text
         )  # omatcsvt/124_csv_YJ4ofuUwsp.txt
-        url = self.options["URL"] + "/" + downloadable_file[0]
-        print(f"Lopullinen latausurl: {url}")
+        final_url = self.options["URL"] + "/" + downloadable_file[0]
+        print(f"Lopullinen latausurl: {final_url}")
 
         try:
-            csv = self.session.get(self.url)
+            csv = self.session.get(final_url)
             csv.raise_for_status()
         except Exception as e:
             print("Virhe csv-tiedoston latauksessa. \n", e)
@@ -188,12 +188,21 @@ class DefaultOptions:
 @dataclass
 class YearOptions(DefaultOptions):
     year: int = datetime.now().year
+    half_year: int = 0
     PIILOTA_KOONTIALKUPER: str = ""
 
     def __post_init__(self):
-        self.TALLENNUS_ALKUPVM = "1.1." + str(self.year)
-        self.TALLENNUS_LOPPUPVM = "31.12." + str(self.year)
-        self.PIILOTA_KOONTIALKUPER = ''
+        self.PIILOTA_KOONTIALKUPER = ""
+        if self.half_year == 0:
+            self.TALLENNUS_ALKUPVM = "1.1." + str(self.year)
+            self.TALLENNUS_LOPPUPVM = "31.12." + str(self.year)
+        # keväisin tallennetaan havaintoja enemmän, joten jaetaan vuosi toukokuun lopusta, jotta latausten rivimäärät tasoittuisivat
+        if self.half_year == 1:
+            self.TALLENNUS_ALKUPVM = "1.1." + str(self.year)
+            self.TALLENNUS_LOPPUPVM = "31.5." + str(self.year)
+        if self.half_year == 2:
+            self.TALLENNUS_ALKUPVM = "1.6." + str(self.year)
+            self.TALLENNUS_LOPPUPVM = "31.12." + str(self.year)
 
 
 def absname(filename) -> str:
