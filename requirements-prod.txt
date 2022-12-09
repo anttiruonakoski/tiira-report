@@ -12,7 +12,7 @@ attrs==21.2.0
     #   rasterio
 bokeh==0.13.0
     # via -r requirements.in
-certifi==2021.5.30
+certifi==2022.12.7
     # via
     #   fiona
     #   pyproj
